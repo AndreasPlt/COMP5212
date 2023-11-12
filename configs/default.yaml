@@ -1,6 +1,5 @@
 model:
-  name: resnet18
-  num_classes: 10
+  name: mobilenet_v2
   pretrained: True
   freeze: True
 
