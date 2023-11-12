@@ -6,8 +6,9 @@ from train import train
 from test import test
 import models.model
 import yaml
+import os
 
-import src.util.filter_countries as filter_countries
+from src.util.filter_countries import filter_countries, write_valid_countries
 
 def parse_args():
     import argparse
@@ -37,8 +38,9 @@ def main():
     config = yaml.load(open(args.config, "r"), Loader=yaml.FullLoader)
 
     # filter countries
-    valid_countries = filter_countries.filter_countries(config["data"]["min_images"], config["data"]["data_dir"])
-    filter_countries.write_valid_countries(valid_countries, config["data"]["valid_countries_file"])
+    valid_countries = filter_countries(config["data"]["min_images"], config["data"]["data_dir"])
+    write_valid_countries(valid_countries, 
+                          os.path.join(config["data"]["dir"]), "valid_countries.txt")
     config['model']['num_classes'] = len(valid_countries)
 
     train_loader = get_dataloader(config, valid_countries)
