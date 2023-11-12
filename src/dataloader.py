@@ -5,15 +5,18 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 
 class Kaggle50K(Dataset):
-    def __init__(self, root_dir, transform=None):
+    def __init__(self, root_dir: str, valid_countries: [str] = None,transform=None):
         self.root_dir = root_dir
         self.transform = transform
+        self.valid_countries = valid_countries
         self.image_paths, self.labels = self.load_image_paths_and_labels()
 
     def load_image_paths_and_labels(self):
         image_paths = []
         labels = []
-        for label in os.listdir(self.root_dir):
+        if not self.valid_countries:
+            self.valid_countries = os.listdir(self.root_dir)
+        for label in self.valid_countries:
             label_dir = os.path.join(self.root_dir, label)
             if os.path.isdir(label_dir):
                 for image_name in os.listdir(label_dir):
