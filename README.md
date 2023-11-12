@@ -40,7 +40,7 @@ If you use our project or code in your research or work, please cite our reposit
     
     ```
     @misc{comp5212-project,
-    author = {Your Name and Your Team},
+    author = {Vierling Lukas, Andreas Pletschko, Luis Markert},
     title = {COMP5212 Machine Learning Project},
     year = {2023},
     publisher = {GitHub},
@@ -56,8 +56,6 @@ Here are some milestones we achieved during the project:
 - Milestone 3: Training loop and validation setup
 - Milestone 4: Testing loop and evaluation metrics
 - Milestone 5: Hyperparameter tuning and performance optimization
-Feel free to explore the repository and provide feedback or suggestions. We hope you find our project useful! 😊
-basic
-Copy
+Feel free to explore the repository and provide feedback or suggestions. 
 
-Please note that you may need to adjust and customize the README file based on your specific project details and requirements.
+We hope you find our project useful! 😊
