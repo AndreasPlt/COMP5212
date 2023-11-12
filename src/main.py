@@ -7,6 +7,8 @@ from test import test
 import models.model
 import yaml
 
+import src.util.filter_countries as filter_countries
+
 def parse_args():
     import argparse
     parser = argparse.ArgumentParser(description="Train a model")
@@ -33,8 +35,15 @@ def main():
     # get arguments
     args = parse_args()
     config = yaml.load(open(args.config, "r"), Loader=yaml.FullLoader)
-    train_loader = get_dataloader(config, valid_countries=None)
+
+    # filter countries
+    valid_countries = filter_countries.filter_countries(config["data"]["min_images"], config["data"]["data_dir"])
+    filter_countries.write_valid_countries(valid_countries, config["data"]["valid_countries_file"])
+    config['model']['num_classes'] = len(valid_countries)
+
+    train_loader = get_dataloader(config, valid_countries)
     # TODO get dev and test loader
+
 
     model = get_model(config)
 
