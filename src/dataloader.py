@@ -40,7 +40,7 @@ class Kaggle50K(Dataset):
 
 # Define the transforms to apply to the images
 transform = transforms.Compose([
-    transforms.Resize((224, 224)),
+    #transforms.Resize((224, 224)),
     transforms.ToTensor(),
     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
@@ -55,11 +55,11 @@ root_dir = "data/kaggle_dataset/"
 dataset = Kaggle50K(root_dir, transform=None)  # No transform for visualization
 
 # Select a random sample from the dataset
-sample_index = 8000  # Change this to the desired index
-sample_image, sample_label = dataset[sample_index]
+# sample_index = 8000  # Change this to the desired index
+# sample_image, sample_label = dataset[sample_index]
 
-print("label: " + str(sample_label))
-sample_image.show()
+# print("label: " + str(sample_label))
+# sample_image.show()
 
 
 # Create a DataLoader to handle batching and shuffling
