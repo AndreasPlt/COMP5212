@@ -35,6 +35,8 @@ def train(model, optimizer, criterion, train_loader, num_epochs, device=torch.de
             # Forward + Backward + Optimize
             optimizer.zero_grad()
             outputs = model(images)
+            print(outputs.shape)
+            print(labels.shape)
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
