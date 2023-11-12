@@ -17,7 +17,7 @@ def train(model, optimizer, criterion, train_loader, num_epochs, device=torch.de
     for _, (images, labels) in enumerate(train_loader):
         images.to(device)
         labels.to(device)
-        print(images.device)
+        print(images.get_device())
         outputs = model(images)
         labels = torch.squeeze(labels,dim=1)
         loss = criterion(outputs, labels)
