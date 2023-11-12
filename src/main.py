@@ -1,7 +1,7 @@
 # imports
 import dataloader
 import torch
-from torchsummary import summary
+#from torchsummary import summary
 from train import train
 from test import test
 import models.model
@@ -42,7 +42,7 @@ def main():
     optimizer = torch.optim.Adam(model.parameters(), lr=config['training']['learning_rate'])
     
     # TODO: Fix output for that
-    summary(model, (3, 32, 32))
+    #summary(model, (3, 32, 32))
 
     print(f"Training {config['model']['name']} for {config['training']['num_epochs']} epochs")
     epoch_losses = train(model, optimizer, criterion, train_loader, config['training']['num_epochs'])
