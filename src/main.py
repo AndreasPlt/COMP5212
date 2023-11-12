@@ -41,7 +41,7 @@ def main():
     config = yaml.load(open(args.config, "r"), Loader=yaml.FullLoader)
 
     # filter countries
-    valid_countries = filter_countries(config["data"]["min_images"], config["data"]["data_dir"])
+    valid_countries = filter_countries(config["data"]["min_images"], config["data"]["dir"])
     write_valid_countries(valid_countries, 
                           os.path.join(config["data"]["dir"], "valid_countries.txt"))
     config['model']['num_classes'] = len(valid_countries)
