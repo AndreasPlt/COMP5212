@@ -40,7 +40,7 @@ If you use our project or code in your research or work, please cite our reposit
     
     ```
     @misc{comp5212-project,
-    author = {Vierling Lukas, Andreas Pletschko, Luis Markert},
+    author = {Luis Markert, Vierling Lukas, Andreas Pletschko},
     title = {COMP5212 Machine Learning Project},
     year = {2023},
     publisher = {GitHub},
