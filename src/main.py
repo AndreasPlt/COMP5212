@@ -22,14 +22,19 @@ def get_model(config):
 
     return models.model.get_model(model_name, num_classes, pretrained, freeze)
 
+def get_dataloader(config, valid_countries):
+    return dataloader.Kaggle50K(
+        dataloader.root_dir,
+        valid_countries,
+        transform=dataloader.transform
+    )
 
 def main():
     # get arguments
     args = parse_args()
     config = yaml.load(open(args.config, "r"), Loader=yaml.FullLoader)
-    train_loader, test_loader = dataloader.cifar_loaders(
-        dataloader.batch_size,
-    )
+    train_loader = get_dataloader(config, valid_countries=None)
+    # TODO get dev and test loader
 
     model = get_model(config)
 
