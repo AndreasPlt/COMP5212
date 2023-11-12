@@ -6,6 +6,7 @@ model:
 training:
   num_epochs: 100
   learning_rate: 0.001
+  shuffle: True
   batch_size: 32
   device: cuda
 
