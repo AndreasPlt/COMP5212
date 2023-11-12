@@ -33,7 +33,7 @@ class Kaggle50K(Dataset):
         image_path = self.image_paths[idx]
         label_str = self.labels[idx]
         label = self.labels_to_idx[label_str]
-        label = torch.tensor(label)
+        label = torch.FloatTensor([label])
 
         image = Image.open(image_path).convert("RGB")
         if self.transform:
