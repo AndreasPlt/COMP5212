@@ -5,7 +5,6 @@ import torch
 def train(model, optimizer, criterion, train_loader, num_epochs, device=torch.device("cpu")):
     model.to(device)
     criterion.to(device)
-    print(device)
     
     progress_bar = tqdm(range(num_epochs))
     initial_loss = 0
@@ -15,8 +14,8 @@ def train(model, optimizer, criterion, train_loader, num_epochs, device=torch.de
 
     # Calculate initial loss
     for _, (images, labels) in enumerate(train_loader):
-        images.to(device="cuda")
-        labels.to(device="cuda")
+        images = images.to(device)
+        labels = labels.to(device)
         print(images.get_device())
         outputs = model(images)
         labels = torch.squeeze(labels,dim=1)
@@ -36,8 +35,8 @@ def train(model, optimizer, criterion, train_loader, num_epochs, device=torch.de
         progress_bar.set_description(desc=f"Epoch {epoch+1}/{num_epochs}")
         total_loss = 0
         for _, (images, labels) in enumerate(train_loader):
-            images.to(device)
-            labels.to(device)
+            images = images.to(device)
+            labels = labels.to(device)
             labels = torch.squeeze(labels,dim=1)
             # Forward + Backward + Optimize
             optimizer.zero_grad()
