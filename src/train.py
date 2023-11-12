@@ -13,6 +13,8 @@ def train(model, optimizer, criterion, train_loader, num_epochs, device=torch.de
 
     # Calculate initial loss
     for _, (images, labels) in enumerate(train_loader):
+        outputs.to(device)
+        labels.to(device)
         outputs = model(images)
         labels = torch.squeeze(labels,dim=1)
         loss = criterion(outputs, labels)
@@ -33,6 +35,7 @@ def train(model, optimizer, criterion, train_loader, num_epochs, device=torch.de
         for _, (images, labels) in enumerate(train_loader):
             images.to(device)
             labels.to(device)
+            labels = torch.squeeze(labels,dim=1)
             # Forward + Backward + Optimize
             optimizer.zero_grad()
             outputs = model(images)
