@@ -10,7 +10,9 @@ training:
   device: cuda
 
 data:
-  min_images_per_class: 100
+  min_images: 100
   train_split: 0.8
   dev_split: 0.1
   test_split: 0.1
+  data_dir: data
+  

@@ -7,7 +7,7 @@ from test import test
 import models.model
 import yaml
 
-import src.util.filter_countries as filter_countries
+import util.filter_countries as filter_countries
 
 def parse_args():
     import argparse
