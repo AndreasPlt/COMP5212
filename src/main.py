@@ -33,7 +33,7 @@ def main():
     # get arguments
     args = parse_args()
     config = yaml.load(open(args.config, "r"), Loader=yaml.FullLoader)
-    train_loader = dataloader.get_dataloader(config)
+    train_loader = get_dataloader(config, valid_countries=None)
     # TODO get dev and test loader
 
     model = get_model(config)
