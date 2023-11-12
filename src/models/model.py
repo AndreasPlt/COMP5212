@@ -24,7 +24,6 @@ def get_model(model_name, num_classes=35, pretrained=True, freeze=True):
         )
     else:
         raise NotImplementedError(f"Model {model_name} not implemented")
-    
     if freeze:
         for param in model.parameters():
             param.requires_grad = False
