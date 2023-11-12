@@ -1,6 +1,7 @@
 # imports
 import dataloader
 import torch
+from torch.utils.data import DataLoader
 #from torchsummary import summary
 from train import train
 from test import test
@@ -8,7 +9,7 @@ import models.model
 import yaml
 import os
 
-from src.util.filter_countries import filter_countries, write_valid_countries
+from util.filter_countries import filter_countries, write_valid_countries
 
 def parse_args():
     import argparse
@@ -26,10 +27,14 @@ def get_model(config):
     return models.model.get_model(model_name, num_classes, pretrained, freeze)
 
 def get_dataloader(config, valid_countries):
-    return dataloader.Kaggle50K(
+    return DataLoader(
+        dataloader.Kaggle50K(
         dataloader.root_dir,
         valid_countries,
-        transform=dataloader.transform
+        transform=dataloader.transform, 
+        ),
+        batch_size = 32
+
     )
 
 def main():
@@ -40,7 +45,7 @@ def main():
     # filter countries
     valid_countries = filter_countries(config["data"]["min_images"], config["data"]["data_dir"])
     write_valid_countries(valid_countries, 
-                          os.path.join(config["data"]["dir"]), "valid_countries.txt")
+                          os.path.join(config["data"]["dir"],"valid_countries.txt"))
     config['model']['num_classes'] = len(valid_countries)
 
     train_loader = get_dataloader(config, valid_countries)

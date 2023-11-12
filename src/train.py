@@ -24,7 +24,7 @@ def train(model, optimizer, criterion, train_loader, num_epochs, device=torch.de
     }
     progress_bar.set_postfix(post_fix)
     epoch_losses.append(initial_loss.item())
-
+    print("Start training")
     # training loop
     for epoch in progress_bar:
         progress_bar.set_description(desc=f"Epoch {epoch+1}/{num_epochs}")
