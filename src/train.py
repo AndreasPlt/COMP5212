@@ -5,6 +5,7 @@ import torch
 def train(model, optimizer, criterion, train_loader, num_epochs, device=torch.device("cpu")):
     model.to(device)
     criterion.to(device)
+    print(device)
     
     progress_bar = tqdm(range(num_epochs))
     initial_loss = 0
