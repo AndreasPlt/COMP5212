@@ -59,7 +59,7 @@ sample_index = 8000  # Change this to the desired index
 sample_image, sample_label = dataset[sample_index]
 
 print("label: " + str(sample_label))
-sample_image.show()
+#sample_image.show()
 
 
 # Create a DataLoader to handle batching and shuffling
