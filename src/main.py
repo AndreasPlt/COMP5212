@@ -1,34 +1,48 @@
 # imports
 import dataloader
 import torch
+from torchsummary import summary
 from train import train
 from test import test
+import models.model
+import yaml
 
 def parse_args():
     import argparse
-    parser = argparse.ArgumentParser(description='Train a linear model.')
-    parser.add_argument('model', type=str, choices=['fully-connected', 'convolutional'])
-    parser.add_argument('--num_epochs', type=int, default=10)
-    parser.add_argument('--activation', type=str, choices=['relu', 'none', 'sigmoid', 'tanh'], default='relu')
-    parser.add_argument('--plot_loss', action='store_true')
-    args = parser.parse_args()
-    return args
+    parser = argparse.ArgumentParser(description="Train a model")
+    parser.add_argument("--config", type=str, default="configs/default.yaml", help="Path to config file")
+
+    return parser.parse_args()
+
+def get_model(config):
+    model_name = config["model"]["name"]
+    num_classes = config["model"]["num_classes"]
+    pretrained = config["model"]["pretrained"]
+    freeze = config["model"]["freeze"]
+
+    return models.model.get_model(model_name, num_classes, pretrained, freeze)
+
 
 def main():
     # get arguments
     args = parse_args()
+    config = yaml.load(open(args.config, "r"), Loader=yaml.FullLoader)
     train_loader, test_loader = dataloader.cifar_loaders(
         dataloader.batch_size,
     )
+
+    model = get_model(config)
+
     criterion = torch.nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+    optimizer = torch.optim.Adam(model.parameters(), lr=config['training']['learning_rate'])
     
+    # TODO: Fix output for that
     summary(model, (3, 32, 32))
 
-    print(f"Training {args.model} model with {args.activation} activation for {args.num_epochs} epochs")
-    epoch_losses = train(model, optimizer, criterion, train_loader, args.num_epochs)
+    print(f"Training {config['model']['name']} for {config['training']['num_epochs']} epochs")
+    epoch_losses = train(model, optimizer, criterion, train_loader, config['training']['num_epochs'])
 
-    print(f"Testing {args.model}")
+    print(f"Testing {config['model']['name']}")
     test(model, test_loader)
 
     if args.plot_loss:

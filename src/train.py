@@ -2,7 +2,9 @@ from tqdm import tqdm
 import torch
 
 
-def train(model, optimizer, criterion, train_loader, num_epochs):
+def train(model, optimizer, criterion, train_loader, num_epochs, device=torch.device("cpu")):
+    model.to(device)
+    
     progress_bar = tqdm(range(num_epochs))
     initial_loss = 0
     epoch_losses = []
@@ -28,6 +30,8 @@ def train(model, optimizer, criterion, train_loader, num_epochs):
         progress_bar.set_description(desc=f"Epoch {epoch+1}/{num_epochs}")
         total_loss = 0
         for _, (images, labels) in enumerate(train_loader):
+            images.to(device)
+            labels.to(device)
             # Forward + Backward + Optimize
             optimizer.zero_grad()
             outputs = model(images)

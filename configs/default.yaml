@@ -1,0 +1,17 @@
+model:
+  name: resnet18
+  num_classes: 10
+  pretrained: True
+  freeze: True
+
+training:
+  num_epochs: 100
+  learning_rate: 0.001
+  batch_size: 32
+  device: cuda
+
+data:
+  min_images_per_class: 100
+  train_split: 0.8
+  dev_split: 0.1
+  test_split: 0.1
