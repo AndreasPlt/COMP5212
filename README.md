@@ -15,10 +15,10 @@ This project focuses on geolocation prediction (country) using Google Street Vie
 ## Usage
 1. Clone the repository:
    ```
-   git clone https://github.com/your-username/comp5212-project.git
+   git clone https://github.com/AndreasPlt/COMP5212.git
 2. Navigate to the project directory:
    ```
-   cd comp5212-project
+   cd COMP5212
     ```
 3. Install the required dependencies:
 
@@ -40,12 +40,12 @@ If you use our project or code in your research or work, please cite our reposit
     
     ```
     @misc{comp5212-project,
-    author = {Luis Markert, Vierling Lukas, Andreas Pletschko},
+    author = {Louis Markert, Vierling Lukas, Andreas Pletschko},
     title = {COMP5212 Machine Learning Project},
     year = {2023},
     publisher = {GitHub},
     journal = {GitHub repository},
-    howpublished = {\url{https://github.com/your-username/comp5212-project}},
+    howpublished = {\url{https://github.com/AndreasPlt/COMP5212.git}},
     }
     ```
 
