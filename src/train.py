@@ -14,6 +14,7 @@ def train(model, optimizer, criterion, train_loader, num_epochs, device=torch.de
     # Calculate initial loss
     for _, (images, labels) in enumerate(train_loader):
         outputs = model(images)
+        labels = torch.squeeze(labels,dim=1)
         loss = criterion(outputs, labels)
         initial_loss += loss
     initial_loss /= n_batches
