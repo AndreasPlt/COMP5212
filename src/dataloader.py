@@ -10,6 +10,7 @@ class Kaggle50K(Dataset):
         self.transform = transform
         self.valid_countries = valid_countries
         self.image_paths, self.labels = self.load_image_paths_and_labels()
+        self.labels_to_idx = {label: idx for idx, label in enumerate(set(self.labels))}
 
     def load_image_paths_and_labels(self):
         image_paths = []
@@ -30,7 +31,9 @@ class Kaggle50K(Dataset):
 
     def __getitem__(self, idx):
         image_path = self.image_paths[idx]
-        label = self.labels[idx]
+        label_str = self.labels[idx]
+        label = self.labels_to_idx[label_str]
+        label = torch.tensor(label)
 
         image = Image.open(image_path).convert("RGB")
         if self.transform:
