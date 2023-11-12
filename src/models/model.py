@@ -3,6 +3,10 @@ import numpy as np
 
 from torchvision.models import mobilenet_v2, mobilenet_v3_small, mobilenet_v3_large
 
+'''
+Function to get the model fro pretraining
+Source: https://youtu.be/dQw4w9WgXcQ?si=DWrEaB61AxnhRmZu
+'''
 def get_model(model_name, num_classes=35, pretrained=True, freeze=True):
     if model_name == 'mobilenet_v2':
         model = mobilenet_v2(pretrained=pretrained)
