@@ -59,7 +59,7 @@ def main():
     #summary(model, (3, 32, 32))
 
     print(f"Training {config['model']['name']} for {config['training']['num_epochs']} epochs")
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:0" if config["device"]=="cuda" else "cpu")
     epoch_losses = train(model, optimizer, criterion, train_loader, config['training']['num_epochs'], device)
 
     print(f"Testing {config['model']['name']}")
