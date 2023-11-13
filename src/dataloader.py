@@ -9,8 +9,16 @@ class Kaggle50K(Dataset):
         self.root_dir = root_dir
         self.transform = transform
         self.valid_countries = valid_countries
+        self.remove_false_sizes()
         self.image_paths, self.labels = self.load_image_paths_and_labels()
         self.labels_to_idx = {label: idx for idx, label in enumerate(set(self.labels))}
+
+    # remove images that have the wrong size
+    def remove_false_sizes(self):
+        # iterate over all filenames in the wrong resolution files
+        with open(os.path.join(self.root_dir, "wrong_resolution_files.txt"), "r") as f:
+            for line in f:
+                os.remove(os.path.join(self.root_dir, line.strip()))
 
     def load_image_paths_and_labels(self):
         image_paths = []
@@ -39,7 +47,7 @@ class Kaggle50K(Dataset):
         if self.transform:
             image = self.transform(image)
 
-        return image, label
+        return image, label, image_path
 
 # Define the transforms to apply to the images
 transform = transforms.Compose([
