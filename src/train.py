@@ -2,7 +2,6 @@ from tqdm import tqdm
 import torch
 from torch.utils.tensorboard import SummaryWriter
 
-
 def train(model, optimizer, criterion, train_loader, num_epochs, device=torch.device("cpu")):
     model.to(device)
     criterion.to(device)

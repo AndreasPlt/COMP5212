@@ -27,8 +27,9 @@ def get_model(config):
     num_classes = config["model"]["num_classes"]
     pretrained = config["model"]["pretrained"]
     freeze = config["model"]["freeze"]
+    unfreeze_last_n = config["model"]["unfreeze_last_n"]
 
-    return models.model.get_model(model_name, num_classes, pretrained, freeze)
+    return models.model.get_model(model_name, num_classes, pretrained, freeze, unfreeze_last_n)
 
 def get_dataloader(config, valid_countries):
     transforms = kaggle50k_dataset.transform
