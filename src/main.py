@@ -70,11 +70,12 @@ def write_manifest(config, valid_countries):
 
     return train_out, dev_out, test_out
 
-def remove_false_sizes(self):
+def remove_false_sizes(config):
+        root_dir = config["data"]["dir"]
         # iterate over all filenames in the wrong resolution files
-        with open(os.path.join(self.root_dir, "wrong_resolution_files.txt"), "r") as f:
+        with open(os.path.join(root_dir, "wrong_resolution_files.txt"), "r") as f:
             for line in f:
-                image = os.path.join(self.root_dir, line.strip())
+                image = os.path.join(root_dir, line.strip())
                 if os.path.isfile(image):
                     os.remove(image)
 
@@ -107,8 +108,14 @@ def main():
     #summary(model, (3, 32, 32))
 
     print(f"Training {config['model']['name']} for {config['training']['num_epochs']} epochs")
-    device = torch.device("cuda:0" if config['training']['device']=="cuda" else "cpu")
-    epoch_losses = train(model, optimizer, criterion, train_loader, config['training']['num_epochs'], device)
+    epoch_losses = train(
+        model, 
+        optimizer, 
+        criterion, 
+        train_loader, 
+        config['training']['num_epochs'], 
+        config['training']['device']
+        )
 
     print(f"Testing {config['model']['name']}")
     test(model, test_loader)

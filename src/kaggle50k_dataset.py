@@ -15,20 +15,22 @@ class Kaggle50K(Dataset):
         image_paths = []
         labels = []
 
-        tsv_file = open(self.tsv_path, "w")
+        tsv_file = open(self.tsv_path, "r")
 
         for line in tsv_file:
             if line in ['\n', '\r\n']:
                 continue
-            image_path, label = line.strip().split("\t")
+            label, image_path = os.path.split(line.strip())
             image_paths.append(image_path)
             labels.append(label)
+
+        return image_paths, labels
 
     def __len__(self):
         return len(self.image_paths)
 
     def __getitem__(self, idx):
-        image_path = self.image_paths[idx]
+        image_path = os.path.join(self.labels[idx], self.image_paths[idx])
         label_str = self.labels[idx]
         label = self.labels_to_idx[label_str]
         label = torch.LongTensor([label])
