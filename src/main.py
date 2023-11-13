@@ -1,14 +1,15 @@
-# imports
-import dataloader
+# imports 
 import torch
-from torch.utils.data import DataLoader
-#from torchsummary import summary
 from torch.utils.data import Dataset, DataLoader
+#from torchsummary import summary
+import yaml
+import os
+
+# import project files
+import dataloader
 from train import train
 from test import test
 import models.model
-import yaml
-import os
 
 from util.filter_countries import filter_countries, write_valid_countries
 from util.filter_countries import filter_countries, write_valid_countries
