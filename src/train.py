@@ -2,10 +2,15 @@ from tqdm import tqdm
 import torch
 from torch.utils.tensorboard import SummaryWriter
 from test import test
+import time
 
 def train(model, optimizer, criterion, train_loader, dev_loader, num_epochs, device=torch.device("cpu")):
     model.to(device)
+    
+    time.sleep(60)
     criterion.to(device)
+    time.sleep(10)
+
 
     writer = SummaryWriter("logs")
     
@@ -19,8 +24,6 @@ def train(model, optimizer, criterion, train_loader, dev_loader, num_epochs, dev
     for i, (images, labels) in enumerate(train_loader):
         images = images.to(device)
         labels = labels.to(device)
-        print(images.shape)
-        print(labels.shape)
         print("batch " + str(i+1) + "/" + str(n_batches))
         outputs = model(images)
         labels = torch.squeeze(labels,dim=1)
