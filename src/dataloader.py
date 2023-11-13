@@ -47,7 +47,7 @@ class Kaggle50K(Dataset):
         if self.transform:
             image = self.transform(image)
 
-        return image, label, image_path
+        return image, label
 
 # Define the transforms to apply to the images
 transform = transforms.Compose([
