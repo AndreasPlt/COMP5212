@@ -18,7 +18,9 @@ class Kaggle50K(Dataset):
         # iterate over all filenames in the wrong resolution files
         with open(os.path.join(self.root_dir, "wrong_resolution_files.txt"), "r") as f:
             for line in f:
-                os.remove(os.path.join(self.root_dir, line.strip()))
+                image = os.path.join(self.root_dir, line.strip())
+                if os.path.isfile(image):
+                    os.remove(image)
 
     def load_image_paths_and_labels(self):
         image_paths = []
