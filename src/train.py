@@ -56,6 +56,7 @@ def train(model, optimizer, criterion, train_loader, dev_loader, num_epochs, dev
         writer.add_scalar("Loss (train)/epoch", total_loss.item(), epoch)
         accuracy = test(model, dev_loader, device)
         writer.add_scalar("Accuracy (dev)/epoch", accuracy, epoch)
+        writer.flush()
         post_fix = {
             "epoch": epoch+1,
             "loss": total_loss.item()
