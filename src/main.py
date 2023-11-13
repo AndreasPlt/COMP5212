@@ -4,7 +4,6 @@ from torch.utils.data import Dataset, DataLoader
 #from torchsummary import summary
 import yaml
 import os
-import matplotlib.pyplot as plt
 
 # import project files
 import kaggle50k_dataset
