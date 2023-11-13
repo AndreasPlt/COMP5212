@@ -2,10 +2,15 @@ from tqdm import tqdm
 import torch
 from torch.utils.tensorboard import SummaryWriter
 from test import test
+import time
 
 def train(model, optimizer, criterion, train_loader, dev_loader, num_epochs, device=torch.device("cpu")):
     model.to(device)
+    
+    time.sleep(60)
     criterion.to(device)
+    time.sleep(10)
+
 
     writer = SummaryWriter("logs")
     
