@@ -114,22 +114,16 @@ def main():
         model, 
         optimizer, 
         criterion, 
-        train_loader, 
+        train_loader,
+        dev_loader, 
         config['training']['num_epochs'], 
         config['training']['device']
         )
 
     print(f"Testing {config['model']['name']}")
-    test(model, test_loader)
+    accuracy = test(model, test_loader)
+    print(f'Accuracy of the model on the test images: {accuracy:.2f}%')
 
-    if args.plot_loss:
-        plt.plot(epoch_losses)
-        plt.xlabel("Epoch")
-        plt.ylabel("Loss")
-        plt.ylim(0, 2)
-        plt.title(f"{args.model} with {args.activation} activation")
-        plt.savefig(f"{args.model}_{args.activation}.png")
-        plt.show()
 
 if __name__ == "__main__":
     main()

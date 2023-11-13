@@ -1,8 +1,9 @@
 from tqdm import tqdm
 import torch
 from torch.utils.tensorboard import SummaryWriter
+from test import test
 
-def train(model, optimizer, criterion, train_loader, num_epochs, device=torch.device("cpu")):
+def train(model, optimizer, criterion, train_loader, dev_loader, num_epochs, device=torch.device("cpu")):
     model.to(device)
     criterion.to(device)
 
@@ -34,6 +35,7 @@ def train(model, optimizer, criterion, train_loader, num_epochs, device=torch.de
     print("Start training")
     # training loop
     for epoch in progress_bar:
+        model.train()
         progress_bar.set_description(desc=f"Epoch {epoch+1}/{num_epochs}")
         total_loss = 0
         for i, (images, labels) in enumerate(train_loader):
@@ -50,11 +52,14 @@ def train(model, optimizer, criterion, train_loader, num_epochs, device=torch.de
             total_loss += loss
 
         total_loss /= n_batches
-        writer.add_scalar("Loss/epoch", total_loss.item(), epoch)
+        writer.add_scalar("Loss (train)/epoch", total_loss.item(), epoch)
+        accuracy = test(model, dev_loader, device)
+        writer.add_scalar("Accuracy (dev)/epoch", accuracy, epoch)
         post_fix = {
             "epoch": epoch+1,
             "loss": total_loss.item()
         }
+
         progress_bar.set_postfix(post_fix)
         epoch_losses.append(total_loss.item())
 
