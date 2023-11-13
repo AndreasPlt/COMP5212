@@ -1,12 +1,14 @@
-# imports
-import dataloader
+# imports 
 import torch
 #from torchsummary import summary
+import yaml
+import os
+
+# import project files
+import dataloader
 from train import train
 from test import test
 import models.model
-import yaml
-import os
 
 from src.util.filter_countries import filter_countries, write_valid_countries
 
@@ -40,7 +42,7 @@ def main():
     # filter countries
     valid_countries = filter_countries(config["data"]["min_images"], config["data"]["data_dir"])
     write_valid_countries(valid_countries, 
-                          os.path.join(config["data"]["dir"]), "valid_countries.txt")
+                          os.path.join(config["data"]["dir"], "valid_countries.txt"))
     config['model']['num_classes'] = len(valid_countries)
 
     train_loader = get_dataloader(config, valid_countries)
