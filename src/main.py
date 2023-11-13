@@ -6,13 +6,13 @@ import yaml
 import os
 
 # import project files
-import dataloader
+import kaggle50k_dataset
 from train import train
 from test import test
 import models.model
 
-from util.filter_countries import filter_countries, write_valid_countries
-from util.filter_countries import filter_countries, write_valid_countries
+from util.filter_countries import filter_countries
+from util.manifest_creation import create_manifest
 
 def parse_args():
     import argparse
@@ -30,26 +30,73 @@ def get_model(config):
     return models.model.get_model(model_name, num_classes, pretrained, freeze)
 
 def get_dataloader(config, valid_countries):
-    return DataLoader(dataloader.Kaggle50K(
-        dataloader.root_dir,
-        valid_countries,
-        transform=dataloader.transform
-    ), batch_size=config["training"]["batch_size"], shuffle=config["training"]["shuffle"])
+    transforms = kaggle50k_dataset.transform
+    batch_size = config["training"]["batch_size"]
+
+    train_loader = DataLoader(
+        kaggle50k_dataset.Kaggle50K(config["data"]["train_manifest"], transforms),
+        batch_size=batch_size,
+        shuffle=True,
+    )
+
+    dev_loader = DataLoader(
+        kaggle50k_dataset.Kaggle50K(config["data"]["dev_manifest"], transforms),
+        batch_size=batch_size,
+        shuffle=True,
+    )
+
+    test_loader = DataLoader(
+        kaggle50k_dataset.Kaggle50K(config["data"]["test_manifest"], transforms),
+        batch_size=batch_size,
+        shuffle=True,
+    )
+
+    return train_loader, dev_loader, test_loader
+
+def write_manifest(config, valid_countries):
+    create_manifest(
+        train_split=config["data"]["train_split"],
+        dev_split=config["data"]["dev_split"],
+        test_split=config["data"]["test_split"],
+        seed=config["data"]["split_seed"],
+        root_dir=config["data"]["dir"],
+        output_dir=config["data"]["dir"],
+        subfolders=valid_countries,  
+    )
+
+    train_out = os.path.join(config["data"]["dir"], "train.tsv")
+    dev_out = os.path.join(config["data"]["dir"], "dev.tsv")
+    test_out = os.path.join(config["data"]["dir"], "test.tsv")
+
+    return train_out, dev_out, test_out
+
+def remove_false_sizes(self):
+        # iterate over all filenames in the wrong resolution files
+        with open(os.path.join(self.root_dir, "wrong_resolution_files.txt"), "r") as f:
+            for line in f:
+                image = os.path.join(self.root_dir, line.strip())
+                if os.path.isfile(image):
+                    os.remove(image)
 
 def main():
     # get arguments
     args = parse_args()
     config = yaml.load(open(args.config, "r"), Loader=yaml.FullLoader)
+    # remove images that have the wrong size
+    remove_false_sizes(config)
 
     # filter countries
     valid_countries = filter_countries(config["data"]["min_images"], config["data"]["dir"])
-    write_valid_countries(valid_countries, 
-                          os.path.join(config["data"]["dir"], "valid_countries.txt"))
     config['model']['num_classes'] = len(valid_countries)
 
-    train_loader = get_dataloader(config, valid_countries)
-    # TODO get dev and test loader
+    # write tsv files
+    train_out, dev_out, test_out = write_manifest(config, valid_countries)
+    config['data']['train_manifest'] = train_out
+    config['data']['dev_manifest'] = dev_out
+    config['data']['test_manifest'] = test_out
 
+    # get data loaders
+    train_loader, dev_loader, test_loader = get_dataloader(config, valid_countries)
 
     model = get_model(config)
 
