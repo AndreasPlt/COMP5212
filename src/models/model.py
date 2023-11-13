@@ -38,6 +38,8 @@ def get_model(model_name, num_classes=35, pretrained=True, freeze=True, unfreeze
         for param in model.classifier.parameters():
             param.requires_grad = True
         # Unfreeze the last n layers
+        if unfreeze_last_n <= 0:
+            return model
         for param in model.features[-unfreeze_last_n:].parameters():
             param.requires_grad = True
     return model
