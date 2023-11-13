@@ -4,6 +4,7 @@ from torch.utils.data import Dataset, DataLoader
 #from torchsummary import summary
 import yaml
 import os
+import matplotlib.pyplot as plt
 
 # import project files
 import kaggle50k_dataset
@@ -121,7 +122,6 @@ def main():
     test(model, test_loader)
 
     if args.plot_loss:
-        import matplotlib.pyplot as plt
         plt.plot(epoch_losses)
         plt.xlabel("Epoch")
         plt.ylabel("Loss")
