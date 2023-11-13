@@ -47,6 +47,7 @@ def train(model, optimizer, criterion, train_loader, dev_loader, num_epochs, dev
             optimizer.zero_grad()
             outputs = model(images)
             loss = criterion(outputs, labels)
+            print("batch " + str(i+1) + "/" + str(n_batches))
             writer.add_scalar("Loss/batch", loss.item(), (epoch*n_batches + i))
             loss.backward()
             optimizer.step()
