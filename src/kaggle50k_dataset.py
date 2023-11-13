@@ -5,34 +5,24 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 
 class Kaggle50K(Dataset):
-    def __init__(self, root_dir: str, valid_countries: [str] = None,transform=None):
-        self.root_dir = root_dir
+    def __init__(self, tsv_path:str, transform=None):
         self.transform = transform
-        self.valid_countries = valid_countries
-        self.remove_false_sizes()
+        self.tsv_path = tsv_path
         self.image_paths, self.labels = self.load_image_paths_and_labels()
         self.labels_to_idx = {label: idx for idx, label in enumerate(set(self.labels))}
-
-    # remove images that have the wrong size
-    def remove_false_sizes(self):
-        # iterate over all filenames in the wrong resolution files
-        with open(os.path.join(self.root_dir, "wrong_resolution_files.txt"), "r") as f:
-            for line in f:
-                os.remove(os.path.join(self.root_dir, line.strip()))
 
     def load_image_paths_and_labels(self):
         image_paths = []
         labels = []
-        if not self.valid_countries:
-            self.valid_countries = os.listdir(self.root_dir)
-        for label in self.valid_countries:
-            label_dir = os.path.join(self.root_dir, label)
-            if os.path.isdir(label_dir):
-                for image_name in os.listdir(label_dir):
-                    image_path = os.path.join(label_dir, image_name)
-                    image_paths.append(image_path)
-                    labels.append(label)
-        return image_paths, labels
+
+        tsv_file = open(self.tsv_path, "w")
+
+        for line in tsv_file:
+            if line in ['\n', '\r\n']:
+                continue
+            image_path, label = line.strip().split("\t")
+            image_paths.append(image_path)
+            labels.append(label)
 
     def __len__(self):
         return len(self.image_paths)
@@ -63,7 +53,7 @@ root_dir = "data/kaggle_dataset/"
 #dataset = Kaggle50K(root_dir, transform=transform)
 
 # Create an instance of the custom dataset
-dataset = Kaggle50K(root_dir, transform=None)  # No transform for visualization
+# dataset = Kaggle50K(root_dir, transform=None)  # No transform for visualization
 
 # Select a random sample from the dataset
 # sample_index = 8000  # Change this to the desired index
