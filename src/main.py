@@ -1,5 +1,6 @@
 # imports 
 import torch
+from torch.utils.data import Dataset, DataLoader
 #from torchsummary import summary
 import yaml
 import os
@@ -10,7 +11,8 @@ from train import train
 from test import test
 import models.model
 
-from src.util.filter_countries import filter_countries, write_valid_countries
+from util.filter_countries import filter_countries, write_valid_countries
+from util.filter_countries import filter_countries, write_valid_countries
 
 def parse_args():
     import argparse
@@ -28,11 +30,11 @@ def get_model(config):
     return models.model.get_model(model_name, num_classes, pretrained, freeze)
 
 def get_dataloader(config, valid_countries):
-    return dataloader.Kaggle50K(
+    return DataLoader(dataloader.Kaggle50K(
         dataloader.root_dir,
         valid_countries,
         transform=dataloader.transform
-    )
+    ), batch_size=config["training"]["batch_size"], shuffle=config["training"]["shuffle"])
 
 def main():
     # get arguments
@@ -40,7 +42,7 @@ def main():
     config = yaml.load(open(args.config, "r"), Loader=yaml.FullLoader)
 
     # filter countries
-    valid_countries = filter_countries(config["data"]["min_images"], config["data"]["data_dir"])
+    valid_countries = filter_countries(config["data"]["min_images"], config["data"]["dir"])
     write_valid_countries(valid_countries, 
                           os.path.join(config["data"]["dir"], "valid_countries.txt"))
     config['model']['num_classes'] = len(valid_countries)
@@ -58,7 +60,8 @@ def main():
     #summary(model, (3, 32, 32))
 
     print(f"Training {config['model']['name']} for {config['training']['num_epochs']} epochs")
-    epoch_losses = train(model, optimizer, criterion, train_loader, config['training']['num_epochs'])
+    device = torch.device("cuda:0" if config['training']['device']=="cuda" else "cpu")
+    epoch_losses = train(model, optimizer, criterion, train_loader, config['training']['num_epochs'], device)
 
     print(f"Testing {config['model']['name']}")
     test(model, test_loader)
