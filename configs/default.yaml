@@ -2,6 +2,7 @@ model:
   name: mobilenet_v2
   pretrained: True
   freeze: True
+  unfreeze_last_n: 0
 
 training:
   num_epochs: 100

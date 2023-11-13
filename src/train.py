@@ -1,7 +1,6 @@
 from tqdm import tqdm
 import torch
 
-
 def train(model, optimizer, criterion, train_loader, num_epochs, device=torch.device("cpu")):
     model.to(device)
     criterion.to(device)
