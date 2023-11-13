@@ -1,3 +1,8 @@
 .DS_STORE
-data/
+data/*/
+*.jpg
+*.zip
+*.tgz
 *cpython*
+*__pycache__*
+*.pyc

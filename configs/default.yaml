@@ -18,4 +18,4 @@ data:
   dev_split: 0.1
   test_split: 0.1
   data_dir: data
-  
+  split_seed: 42

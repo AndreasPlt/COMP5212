@@ -1,9 +1,12 @@
 from tqdm import tqdm
 import torch
+from torch.utils.tensorboard import SummaryWriter
 
 def train(model, optimizer, criterion, train_loader, num_epochs, device=torch.device("cpu")):
     model.to(device)
     criterion.to(device)
+
+    writer = SummaryWriter("logs")
     
     progress_bar = tqdm(range(num_epochs))
     initial_loss = 0
@@ -33,7 +36,7 @@ def train(model, optimizer, criterion, train_loader, num_epochs, device=torch.de
     for epoch in progress_bar:
         progress_bar.set_description(desc=f"Epoch {epoch+1}/{num_epochs}")
         total_loss = 0
-        for _, (images, labels) in enumerate(train_loader):
+        for i, (images, labels) in enumerate(train_loader):
             images = images.to(device)
             labels = labels.to(device)
             labels = torch.squeeze(labels,dim=1)
@@ -41,17 +44,22 @@ def train(model, optimizer, criterion, train_loader, num_epochs, device=torch.de
             optimizer.zero_grad()
             outputs = model(images)
             loss = criterion(outputs, labels)
+            writer.add_scalar("Loss/batch", loss.item(), (epoch*n_batches + i))
             loss.backward()
             optimizer.step()
             total_loss += loss
 
         total_loss /= n_batches
+        writer.add_scalar("Loss/epoch", total_loss.item(), epoch)
         post_fix = {
             "epoch": epoch+1,
             "loss": total_loss.item()
         }
         progress_bar.set_postfix(post_fix)
         epoch_losses.append(total_loss.item())
+
+    writer.flush()
+    writer.close()
     
     return epoch_losses
     
