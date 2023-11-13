@@ -29,10 +29,9 @@ This project focuses on geolocation prediction (country) using Google Street Vie
 Run the main script with desired options:
 
    ```
-    python main.py --mode train --config config/config.yaml
+    python main.py --config config/default.yaml
     ```
-
-Replace `--mode train` with `--mode test` for testing.
+Alternatively, choose a different config.yaml.
 Adjust other hyperparameters in the config file, if desired.
 
 ## Citation
