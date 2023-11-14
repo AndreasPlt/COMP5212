@@ -4,6 +4,7 @@ def test(model, test_loader, device=torch.device("cpu")):
     correct = 0.
     total = 0.
     model.eval()
+    model.to(device)
     with torch.no_grad():
         for images, labels in test_loader:
             images = images.to(device)
