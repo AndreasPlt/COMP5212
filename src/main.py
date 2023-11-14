@@ -120,7 +120,7 @@ def main():
         )
 
     print(f"Testing {config['model']['name']}")
-    accuracy = test(model, test_loader)
+    accuracy = test(model, test_loader, config['training']['device'])
     print(f'Accuracy of the model on the test images: {accuracy:.2f}%')
 
 
