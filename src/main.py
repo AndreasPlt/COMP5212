@@ -4,12 +4,15 @@ from torch.utils.data import Dataset, DataLoader
 #from torchsummary import summary
 import yaml
 import os
+from kaggle import api
 
 # import project files
 import kaggle50k_dataset
 from train import train
 from test import test
 import models.model
+
+
 
 from util.filter_countries import filter_countries
 from util.manifest_creation import create_manifest
@@ -20,6 +23,33 @@ def parse_args():
     parser.add_argument("--config", type=str, default="configs/default.yaml", help="Path to config file")
 
     return parser.parse_args()
+
+def download_kaggle_dataset(config):
+    for file in os.listdir(config['data']['dir']):
+        if file == ".dataset":
+            print("Dataset already downloaded")
+            return
+
+    parent_dir, dataset_name = os.path.split(config['data']['dir'])
+    api.dataset_download_files(
+        dataset='ubitquitin/geolocation-geoguessr-images-50k',
+        path=parent_dir,
+        unzip=True,
+        quiet=False
+    )
+    
+    # move wrong_resolution_files.txt to data/kaggle_dataset
+    os.rename(
+        os.path.join(config['data']['dir'], "wrong_resolution_files.txt"),
+        os.path.join(parent_dir, "compressed_dataset", "wrong_resolution_files.txt"),
+    )
+
+    # rename compressed_dataset to kaggle_dataset
+    os.rename(
+        os.path.join(parent_dir, "compressed_dataset"),
+        config['data']['dir'],
+    )
+    open(os.path.join(config['data']['dir'], ".dataset"), 'a').close()
 
 def get_model(config):
     model_name = config["model"]["name"]
@@ -85,6 +115,7 @@ def main():
     args = parse_args()
     config = yaml.load(open(args.config, "r"), Loader=yaml.FullLoader)
     # remove images that have the wrong size
+    download_kaggle_dataset(config)
     remove_false_sizes(config)
 
     # filter countries
