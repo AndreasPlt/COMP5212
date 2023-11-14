@@ -1,23 +1,20 @@
 from tqdm import tqdm
 import torch
 from torch.utils.tensorboard import SummaryWriter
-from test import test
 import time
+import socket
+HOSTNAME = socket.gethostname()
+import datetime
+
+from test import test
 
 def train(model, optimizer, criterion, train_loader, dev_loader, num_epochs, device=torch.device("cpu")):
     model.to(device)
-    
-    time.sleep(60)
     criterion.to(device)
-    time.sleep(10)
-
-
     writer = SummaryWriter("logs")
-    
     progress_bar = tqdm(range(num_epochs))
     initial_loss = 0
     epoch_losses = []
-
     n_batches = len(train_loader)
 
     # Calculate initial loss
@@ -68,8 +65,13 @@ def train(model, optimizer, criterion, train_loader, dev_loader, num_epochs, dev
         progress_bar.set_postfix(post_fix)
         epoch_losses.append(total_loss.item())
 
-    writer.flush()
+        writer.flush()
+
     writer.close()
+
+    # save model
+    save_path = f"checkpoints/model_{HOSTNAME}_{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}_{num_epochs}_epochs_.pth"
+    torch.save(model.state_dict(), save_path)
     
     return epoch_losses
     
