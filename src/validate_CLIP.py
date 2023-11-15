@@ -31,7 +31,7 @@ config['data']['test_manifest'] = test_out
 
 def classify(image):
     inputs = processor(text=valid_countries, images=image, return_tensors="pt", padding=True)
-    inputs['pixel_values'].to(device)
+    inputs['pixel_values'] = inputs['pixel_values'].to(device)
     with torch.no_grad():
         outputs = model(**inputs)
     logits_per_image = outputs.logits_per_image
