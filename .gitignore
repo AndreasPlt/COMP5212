@@ -6,3 +6,4 @@ data/*/
 *cpython*
 *__pycache__*
 *.pyc
+*.pth
