@@ -8,19 +8,19 @@ import datetime
 
 from test import test
 
-def train(model, optimizer, criterion, train_loader, dev_loader, num_epochs, device=torch.device("cpu")):
-    model.to(device)
-    criterion.to(device)
+def train(model, optimizer, criterion, train_loader, dev_loader, config,):
+    model.to(config["training"]["device"])
+    criterion.to(config["training"]["device"])
     writer = SummaryWriter("logs")
-    progress_bar = tqdm(range(num_epochs))
+    progress_bar = tqdm(range(config["training"]["num_epochs"]))
     initial_loss = 0
     epoch_losses = []
     n_batches = len(train_loader)
 
     # Calculate initial loss
     for i, (images, labels) in enumerate(train_loader):
-        images = images.to(device)
-        labels = labels.to(device)
+        images = images.to(config["training"]["device"])
+        labels = labels.to(config["training"]["device"])
         print("batch " + str(i+1) + "/" + str(n_batches))
         outputs = model(images)
         labels = torch.squeeze(labels,dim=1)
@@ -38,11 +38,11 @@ def train(model, optimizer, criterion, train_loader, dev_loader, num_epochs, dev
     # training loop
     for epoch in progress_bar:
         model.train()
-        progress_bar.set_description(desc=f"Epoch {epoch+1}/{num_epochs}")
+        progress_bar.set_description(desc=f"Epoch {epoch+1}/{config['training']['num_epochs']}")
         total_loss = 0
         for i, (images, labels) in enumerate(train_loader):
-            images = images.to(device)
-            labels = labels.to(device)
+            images = images.to(config["training"]["device"])
+            labels = labels.to(config["training"]["device"])
             labels = torch.squeeze(labels,dim=1)
             # Forward + Backward + Optimize
             optimizer.zero_grad()
@@ -55,8 +55,10 @@ def train(model, optimizer, criterion, train_loader, dev_loader, num_epochs, dev
 
         total_loss /= n_batches
         writer.add_scalar("Loss (train)/epoch", total_loss.item(), epoch)
-        accuracy = test(model, dev_loader, device)
-        writer.add_scalar("Accuracy (dev)/epoch", accuracy, epoch)
+
+        accuracy = test(model, dev_loader, k=config["training"]["topk"], device=config["training"]["device"])
+        writer.add_scalar(f"Top {config['training']['topk']} Accuracy (dev)/epoch", accuracy, epoch)
+        
         post_fix = {
             "epoch": epoch+1,
             "loss": total_loss.item()
@@ -70,7 +72,7 @@ def train(model, optimizer, criterion, train_loader, dev_loader, num_epochs, dev
     writer.close()
 
     # save model
-    save_path = f"checkpoints/model_{HOSTNAME}_{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}_{num_epochs}_epochs_.pth"
+    save_path = f"checkpoints/model_{HOSTNAME}_{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}_{config["training"]["num_epochs"]}_epochs_.pth"
     torch.save(model.state_dict(), save_path)
     
     return epoch_losses

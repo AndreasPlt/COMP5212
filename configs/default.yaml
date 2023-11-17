@@ -10,6 +10,7 @@ training:
   shuffle: True
   batch_size: 32
   device: cuda
+  top_k: 3
 
 data:
   dir: data/kaggle_dataset
