@@ -146,12 +146,11 @@ def main():
         criterion, 
         train_loader,
         dev_loader, 
-        config['training']['num_epochs'], 
-        config['training']['device']
+        config,
         )
 
     print(f"Testing {config['model']['name']}")
-    accuracy = test(model, test_loader, config['training']['device'])
+    accuracy = test(model, test_loader, k=config["training"]["topk"], device=config["training"]["device"])
     print(f'Accuracy of the model on the test images: {accuracy:.2f}%')
 
 
