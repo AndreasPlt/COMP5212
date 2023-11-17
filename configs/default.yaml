@@ -5,7 +5,7 @@ model:
   unfreeze_last_n: 0
 
 training:
-  num_epochs: 100
+  num_epochs: 10
   learning_rate: 0.001
   shuffle: True
   batch_size: 32

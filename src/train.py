@@ -48,6 +48,7 @@ def train(model, optimizer, criterion, train_loader, dev_loader, config,):
             optimizer.zero_grad()
             outputs = model(images)
             loss = criterion(outputs, labels)
+            print("batch " + str(i+1) + "/" + str(n_batches))
             writer.add_scalar("Loss/batch", loss.item(), (epoch*n_batches + i))
             loss.backward()
             optimizer.step()
@@ -58,7 +59,8 @@ def train(model, optimizer, criterion, train_loader, dev_loader, config,):
 
         accuracy = test(model, dev_loader, k=config["training"]["topk"], device=config["training"]["device"])
         writer.add_scalar(f"Top {config['training']['topk']} Accuracy (dev)/epoch", accuracy, epoch)
-        
+        writer.flush()
+
         post_fix = {
             "epoch": epoch+1,
             "loss": total_loss.item()
@@ -67,12 +69,10 @@ def train(model, optimizer, criterion, train_loader, dev_loader, config,):
         progress_bar.set_postfix(post_fix)
         epoch_losses.append(total_loss.item())
 
-        writer.flush()
-
     writer.close()
 
     # save model
-    save_path = f"checkpoints/model_{HOSTNAME}_{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}_{config["training"]["num_epochs"]}_epochs_.pth"
+    save_path = f"checkpoints/model_{HOSTNAME}_{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}_{config['training']['num_epochs']}_epochs_.pth"
     torch.save(model.state_dict(), save_path)
     
     return epoch_losses
