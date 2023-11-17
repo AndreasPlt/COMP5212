@@ -18,7 +18,7 @@ def train(model, optimizer, criterion, train_loader, dev_loader, config,):
     n_batches = len(train_loader)
 
     # Calculate initial loss
-    for i, (images, labels) in list(enumerate(train_loader))[:3]:
+    for i, (images, labels) in list(enumerate(train_loader)):
         images = images.to(config["training"]["device"])
         labels = labels.to(config["training"]["device"])
         #print("batch " + str(i+1) + "/" + str(n_batches))
@@ -36,6 +36,12 @@ def train(model, optimizer, criterion, train_loader, dev_loader, config,):
     }
     progress_bar.set_postfix(post_fix)
     epoch_losses.append(initial_loss.item())
+
+    accuracy = test(model, dev_loader, k=config["training"]["topk"], device=config["training"]["device"])
+    writer.add_scalar(f"Top {config['training']['topk']} Accuracy (dev)/epoch", accuracy, 0)
+    writer.add_scalar("Loss (train)/epoch", initial_loss.item(), 0)
+
+    writer.flush()
     print("Start training")
     # training loop
     for epoch in progress_bar:
@@ -57,10 +63,10 @@ def train(model, optimizer, criterion, train_loader, dev_loader, config,):
             total_loss += loss
 
         total_loss /= n_batches
-        writer.add_scalar("Loss (train)/epoch", total_loss.item(), epoch)
+        writer.add_scalar("Loss (train)/epoch", total_loss.item(), epoch+1)
 
         accuracy = test(model, dev_loader, k=config["training"]["topk"], device=config["training"]["device"])
-        writer.add_scalar(f"Top {config['training']['topk']} Accuracy (dev)/epoch", accuracy, epoch)
+        writer.add_scalar(f"Top {config['training']['topk']} Accuracy (dev)/epoch", accuracy, epoch+1)
         writer.flush()
 
         post_fix = {
