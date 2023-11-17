@@ -18,10 +18,12 @@ def train(model, optimizer, criterion, train_loader, dev_loader, config,):
     n_batches = len(train_loader)
 
     # Calculate initial loss
-    for i, (images, labels) in enumerate(train_loader):
+    for i, (images, labels) in list(enumerate(train_loader))[:3]:
         images = images.to(config["training"]["device"])
         labels = labels.to(config["training"]["device"])
-        print("batch " + str(i+1) + "/" + str(n_batches))
+        #print("batch " + str(i+1) + "/" + str(n_batches))
+        post_fix = {"batch": f"{i+1}/{n_batches}"}
+        progress_bar.set_postfix(post_fix)
         outputs = model(images)
         labels = torch.squeeze(labels,dim=1)
         loss = criterion(outputs, labels)
