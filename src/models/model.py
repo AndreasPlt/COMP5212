@@ -1,10 +1,10 @@
 import torch
 import numpy as np
 
-from torchvision.models import mobilenet_v2, mobilenet_v3_small, mobilenet_v3_large
+from torchvision.models import mobilenet_v2, mobilenet_v3_small, mobilenet_v3_large,resnet50,ResNet50_Weights
 
 '''
-Function to get the model fro pretraining
+Function to get the model for pretraining
 Source: https://youtu.be/dQw4w9WgXcQ?si=DWrEaB61AxnhRmZu
 '''
 def get_model(model_name, num_classes=35, pretrained=True, freeze=True, unfreeze_last_n=0):
@@ -29,6 +29,10 @@ def get_model(model_name, num_classes=35, pretrained=True, freeze=True, unfreeze
             torch.nn.Dropout(p=0.2, inplace=False),
             torch.nn.Linear(in_features=1280, out_features=num_classes, bias=True)
         )
+    elif model_name == 'resnet50':
+        model = resnet50(weights = ResNet50_Weights.DEFAULT)
+        num_ftrs = model.fc.in_features  # Get the number of input features for the fully connected layer
+        model.fc = torch.nn.Linear(in_features=num_ftrs,out_features= num_classes, bias=True)  # Replace the fc layer
     else:
         raise NotImplementedError(f"Model {model_name} not implemented")
     if freeze:
