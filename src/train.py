@@ -9,7 +9,7 @@ import datetime
 from test import test
 
 def train(model, optimizer, criterion, train_loader, dev_loader, config,):
-    model.to(config["training"]["device"])
+    model.to(config["training"]["device"])#
     criterion.to(config["training"]["device"])
     writer = SummaryWriter("logs")
     progress_bar = tqdm(range(config["training"]["num_epochs"]))
@@ -17,8 +17,9 @@ def train(model, optimizer, criterion, train_loader, dev_loader, config,):
     epoch_losses = []
     n_batches = len(train_loader)
 
+    print("Calculate initial loss")
     # Calculate initial loss
-    for i, (images, labels) in list(enumerate(train_loader)):
+    for i, (images, labels) in enumerate(train_loader):
         images = images.to(config["training"]["device"])
         labels = labels.to(config["training"]["device"])
         #print("batch " + str(i+1) + "/" + str(n_batches))
@@ -37,8 +38,8 @@ def train(model, optimizer, criterion, train_loader, dev_loader, config,):
     progress_bar.set_postfix(post_fix)
     epoch_losses.append(initial_loss.item())
 
-    accuracy = test(model, dev_loader, k=config["training"]["topk"], device=config["training"]["device"])
-    writer.add_scalar(f"Top {config['training']['topk']} Accuracy (dev)/epoch", accuracy, 0)
+    accuracy = test(model, dev_loader, k=config["training"]["top_k"], device=config["training"]["device"])
+    writer.add_scalar(f"Top {config['training']['top_k']} Accuracy (dev)/epoch", accuracy, 0)
     writer.add_scalar("Loss (train)/epoch", initial_loss.item(), 0)
 
     writer.flush()
@@ -65,8 +66,8 @@ def train(model, optimizer, criterion, train_loader, dev_loader, config,):
         total_loss /= n_batches
         writer.add_scalar("Loss (train)/epoch", total_loss.item(), epoch+1)
 
-        accuracy = test(model, dev_loader, k=config["training"]["topk"], device=config["training"]["device"])
-        writer.add_scalar(f"Top {config['training']['topk']} Accuracy (dev)/epoch", accuracy, epoch+1)
+        accuracy = test(model, dev_loader, k=config["training"]["top_k"], device=config["training"]["device"])
+        writer.add_scalar(f"Top {config['training']['top_k']} Accuracy (dev)/epoch", accuracy, epoch+1)
         writer.flush()
 
         post_fix = {
