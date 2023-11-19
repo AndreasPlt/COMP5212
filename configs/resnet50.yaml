@@ -1,5 +1,5 @@
 model:
-  name: mobilenet_v2
+  name: resnet50
   pretrained: True
   freeze: True
   unfreeze_last_n: 0
