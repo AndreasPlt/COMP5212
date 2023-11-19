@@ -6,6 +6,7 @@ from torchvision.models import mobilenet_v2, mobilenet_v3_small, mobilenet_v3_la
 '''
 Function to get the model fro pretraining
 Source: https://youtu.be/dQw4w9WgXcQ?si=DWrEaB61AxnhRmZu
+For mobilenet_v3 we noticed, that the .classifier replaces the last two convolutions, thereby we had to adjust the input shape of the linear layer. Needs further investigation.
 '''
 def get_model(model_name, num_classes=35, pretrained=True, freeze=True, unfreeze_last_n=0):
     if model_name == 'mobilenet_v2':
@@ -20,14 +21,14 @@ def get_model(model_name, num_classes=35, pretrained=True, freeze=True, unfreeze
         model.classifier = torch.nn.Sequential(
             torch.nn.Flatten(1, -1),
             torch.nn.Dropout(p=0.2, inplace=False),
-            torch.nn.Linear(in_features=1024, out_features=num_classes, bias=True)
+            torch.nn.Linear(in_features=576, out_features=num_classes, bias=True)
         )
     elif model_name == 'mobilenet_v3_large':
         model = mobilenet_v3_large(pretrained=pretrained)
         model.classifier = torch.nn.Sequential(
             torch.nn.Flatten(1, -1),
             torch.nn.Dropout(p=0.2, inplace=False),
-            torch.nn.Linear(in_features=1280, out_features=num_classes, bias=True)
+            torch.nn.Linear(in_features=960, out_features=num_classes, bias=True)
         )
     else:
         raise NotImplementedError(f"Model {model_name} not implemented")
