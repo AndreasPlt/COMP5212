@@ -1,5 +1,5 @@
 model:
-  name: mobilenet_v2
+  name: mobilenet_v3_large
   pretrained: True
   freeze: True
   unfreeze_last_n: 0
