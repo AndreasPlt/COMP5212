@@ -12,8 +12,6 @@ from train import train
 from test import test
 import models.model
 
-
-
 from util.filter_countries import filter_countries
 from util.manifest_creation import create_manifest
 
@@ -151,7 +149,7 @@ def main():
 
     print(f"Testing {config['model']['name']}")
     accuracy = test(model, test_loader, k=config["training"]["top_k"], device=config["training"]["device"])
-    print(f'Accuracy of the model on the test images: {accuracy:.2f}%')
+    print(f'Accuracy of the model on the test images: {(accuracy*100):.2f}%')
 
 
 if __name__ == "__main__":

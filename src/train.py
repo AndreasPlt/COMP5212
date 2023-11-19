@@ -11,7 +11,7 @@ from test import test
 def train(model, optimizer, criterion, train_loader, dev_loader, config,):
     model.to(config["training"]["device"])#
     criterion.to(config["training"]["device"])
-    writer = SummaryWriter("logs")
+    writer = SummaryWriter(f"logs/{config['model']['name']}_{config['training']['num_epochs']}_epochs")
     progress_bar = tqdm(range(config["training"]["num_epochs"]))
     initial_loss = 0
     epoch_losses = []
