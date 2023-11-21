@@ -71,7 +71,7 @@ def train(model, optimizer, criterion, train_loader, dev_loader, config,):
 
         accuracies = test(model, dev_loader, k=config["training"]["top_k"], device=config["training"]["device"])
         for i, top_k in enumerate(config["training"]["top_k"]):
-            writer.add_scalar(f"Top {top_k} Accuracy (dev)/epoch", accuracies[i], 0)
+            writer.add_scalar(f"Top {top_k} Accuracy (dev)/epoch", accuracies[i], epoch+1)
         writer.flush()
 
         post_fix = {
