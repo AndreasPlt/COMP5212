@@ -1,7 +1,9 @@
 import torch
 
-def test(model, test_loader, k=1, device=torch.device("cpu"),):
-    correct = 0.
+def test(model, test_loader, k=[1], device=torch.device("cpu"),):
+    if not isinstance(k, list):
+        k = [k]
+    correct = len(k) * [0.]
     total = 0.
     model.eval()
     model.to(device)
@@ -10,10 +12,11 @@ def test(model, test_loader, k=1, device=torch.device("cpu"),):
             images = images.to(device)
             labels = labels.to(device)
             prediction = model(images)
-            prediction = torch.topk(prediction, k=k, dim=1)[1]
-            update = prediction.eq(labels.view(-1, 1).expand_as(prediction))
-            correct += update.sum().item()
+            for i, top_k in enumerate(k):
+                _, top_k_indices = torch.topk(prediction, k=top_k, dim=1)
+                correct[i] += top_k_indices.eq(labels.view(-1, 1).expand_as(top_k_indices)).sum().item()
             total += images.shape[0]
-    accuracy = correct / total
-    return accuracy
+    
+    accuracies = [c/total for c in correct]
+    return accuracies
 

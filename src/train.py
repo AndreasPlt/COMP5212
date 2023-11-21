@@ -39,8 +39,9 @@ def train(model, optimizer, criterion, train_loader, dev_loader, config,):
     progress_bar.set_postfix(post_fix)
     epoch_losses.append(initial_loss.item())
 
-    accuracy = test(model, dev_loader, k=config["training"]["top_k"], device=config["training"]["device"])
-    writer.add_scalar(f"Top {config['training']['top_k']} Accuracy (dev)/epoch", accuracy, 0)
+    accuracies = test(model, dev_loader, k=config["training"]["top_k"], device=config["training"]["device"])
+    for i, top_k in enumerate(config["training"]["top_k"]):
+        writer.add_scalar(f"Top {top_k} Accuracy (dev)/epoch", accuracies[i], 0)
     writer.add_scalar("Loss (train)/epoch", initial_loss.item(), 0)
 
     writer.flush()
@@ -68,8 +69,9 @@ def train(model, optimizer, criterion, train_loader, dev_loader, config,):
         total_loss /= n_batches
         writer.add_scalar("Loss (train)/epoch", total_loss.item(), epoch+1)
 
-        accuracy = test(model, dev_loader, k=config["training"]["top_k"], device=config["training"]["device"])
-        writer.add_scalar(f"Top {config['training']['top_k']} Accuracy (dev)/epoch", accuracy, epoch+1)
+        accuracies = test(model, dev_loader, k=config["training"]["top_k"], device=config["training"]["device"])
+        for i, top_k in enumerate(config["training"]["top_k"]):
+            writer.add_scalar(f"Top {top_k} Accuracy (dev)/epoch", accuracies[i], 0)
         writer.flush()
 
         post_fix = {

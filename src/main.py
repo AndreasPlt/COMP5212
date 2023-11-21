@@ -148,8 +148,9 @@ def main():
         )
 
     print(f"Testing {config['model']['name']}")
-    accuracy = test(model, test_loader, k=config["training"]["top_k"], device=config["training"]["device"])
-    print(f'Accuracy of the model on the test images: {(accuracy*100):.2f}%')
+    accuracies = test(model, test_loader, k=config["training"]["top_k"], device=config["training"]["device"])
+    for i, top_k in enumerate(config["training"]["top_k"]):
+        print(f'Accuracy of the model on the test images (top {top_k}): {(accuracies[i]*100):.2f}%')
 
 
 if __name__ == "__main__":
