@@ -31,35 +31,26 @@ This project focuses on geolocation prediction (country) using Google Street Vie
    ```
     pip install -r requirements.txt
    ```
-
 4. Navigate to source directory:
 
    ```
     cd src
    ```
-5. Customize the configuration in the config/config.yaml file as needed.
+5. Customize the configuration in the configs/config.yaml file as needed.
    Run the main script with desired options:
 
    ```
-    python main.py --config config/default.yaml
+    python main.py --config configs/default.yaml
    ```
 
 Alternatively, choose a different config.yaml.
 Adjust other hyperparameters in the config file, if desired.
 
 ## Citation
+
 If you use our project or code in your research or work, please cite our repository:
-    
-    ```
-    @misc{comp5212-project,
-    author = {Louis Markert, Vierling Lukas, Andreas Pletschko, Lim Choon Hao},
-    title = {COMP5212 Machine Learning Project},
-    year = {2023},
-    publisher = {GitHub},
-    journal = {GitHub repository},
-    howpublished = {\url{https://github.com/AndreasPlt/COMP5212.git}},
-    }
-    ```
+
+    ``    @misc{comp5212-project,     author = {Louis Markert, Vierling Lukas, Andreas Pletschko, Lim Choon Hao},     title = {COMP5212 Machine Learning Project},     year = {2023},     publisher = {GitHub},     journal = {GitHub repository},     howpublished = {\url{https://github.com/AndreasPlt/COMP5212.git}},     }    ``
 
 ## Milestones
 
