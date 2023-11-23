@@ -48,12 +48,32 @@ inv_map = {v: k for k, v in dataset.labels_to_idx.items()}
 
 total = 0.
 correct = 0.
+
+top_k = [1,3,5]
+correct = len(top_k) * [0.]
+
 for i in range(len(dataset)):
     image = dataset[i][0]
-    label =  dataset[i][1]
-    pred = sorted(classify(image).items(), key=lambda item: item[1])[0]
-    #print("data/kaggle_dataset/" +str(pred[0]))
-    #print(inv_map[label.item()])
-    correct += (("data/kaggle_dataset/" +str(pred[0])) == inv_map[label.item()])
+    label = inv_map[dataset[i][1].item()][20:]
+    pred = sorted(classify(image).items(), key=lambda item: item[1], reverse=True)
+
+    print("------------------------------------------------------")
+    print("prediction: " +str(pred[0][0]))
+    print("true label: " + label)
+
+    #correct += (("data/kaggle_dataset/" +str(pred[0][0])) == inv_map[label.item()])
+    for j, k in enumerate(top_k):
+        if label in [x[0] for x in pred[:k]]:
+            correct[j] += 1
     total += 1
-    print(correct/total)
+
+    for j, k in enumerate(top_k):
+        print(f'Accuracy of the model on the test images (top {k}): {((correct[j] / total)*100):.2f}%')
+
+    print("current progress: " + str(i+1) + "/" + str(len(dataset)))
+    #print("current accuracy: " + str(accuracy))
+
+print("##########################")
+
+for i, k in enumerate(top_k):
+    print(f'Accuracy of the model on the test images (top {k}): {((correct[i] / total)*100):.2f}%')
