@@ -11,7 +11,8 @@ from test import test
 def train(model, optimizer, criterion, train_loader, dev_loader, config,):
     model.to(config["training"]["device"])#
     criterion.to(config["training"]["device"])
-    writer_name = f"logs/{config['model']['name']}_{config['model']['unfreeze_last_n']}_unfreezed_{config['training']['num_epochs']}_epochs"
+    model_name =f"{config['model']['name']}_{config['model']['unfreeze_last_n']}_unfreezed_{config['training']['num_epochs']}_epochs"
+    writer_name = f"logs/{model_name}"
     writer = SummaryWriter(writer_name)
     progress_bar = tqdm(range(config["training"]["num_epochs"]))
     initial_loss = 0
@@ -85,8 +86,13 @@ def train(model, optimizer, criterion, train_loader, dev_loader, config,):
     writer.close()
 
     # save model
-    save_path = f"checkpoints/model_{HOSTNAME}_{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}_{config['training']['num_epochs']}_epochs_.pth"
-    torch.save(model.state_dict(), save_path)
+    save_path = f"checkpoints/model_{HOSTNAME}_{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}_{model_name}.pth"
+    idx_to_labels = {idx: label for label, idx in train_loader.dataset.labels_to_idx.items()}
+    torch.save({
+        'model_state_dict': model.state_dict(),
+        'idx_to_labels': idx_to_labels,
+        'config': config,
+        }, save_path)
     
     return epoch_losses
     
