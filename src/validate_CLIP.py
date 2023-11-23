@@ -39,8 +39,6 @@ def classify(image):
     confidences = {labels[i]: float(prediction[0][i].item()) for i in range(len(labels))}
     return confidences
 
-#pred = sorted(classified.items(), key=lambda item: item[1])[0]
-
 # force batch size 1
 config["training"]["batch_size"] = 1
 dataset = kaggle50k_dataset.Kaggle50K(config["data"]["dev_manifest"], transform=None)
@@ -61,7 +59,6 @@ for i in range(len(dataset)):
     print("prediction: " +str(pred[0][0]))
     print("true label: " + label)
 
-    #correct += (("data/kaggle_dataset/" +str(pred[0][0])) == inv_map[label.item()])
     for j, k in enumerate(top_k):
         if label in [x[0] for x in pred[:k]]:
             correct[j] += 1
@@ -71,7 +68,6 @@ for i in range(len(dataset)):
         print(f'Accuracy of the model on the test images (top {k}): {((correct[j] / total)*100):.2f}%')
 
     print("current progress: " + str(i+1) + "/" + str(len(dataset)))
-    #print("current accuracy: " + str(accuracy))
 
 print("##########################")
 
