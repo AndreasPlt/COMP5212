@@ -1,7 +1,7 @@
 # imports 
 import torch
 from torch.utils.data import Dataset, DataLoader
-#from torchsummary import summary
+from torchsummary import summary
 import yaml
 import os
 from kaggle import api
@@ -130,13 +130,12 @@ def main():
     train_loader, dev_loader, test_loader = get_dataloader(config, valid_countries)
 
     model = get_model(config)
+    # comment out if summary does not work
+    summary(model, (3, 1536, 662))
 
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=config['training']['learning_rate'])
     
-    # TODO: Fix output for that
-    #summary(model, (3, 32, 32))
-
     print(f"Training {config['model']['name']} for {config['training']['num_epochs']} epochs")
     epoch_losses = train(
         model, 
