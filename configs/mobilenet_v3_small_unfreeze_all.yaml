@@ -1,0 +1,22 @@
+model:
+  name: mobilenet_v3_small
+  pretrained: True
+  freeze: False
+  unfreeze_last_n: 0
+
+training:
+  num_epochs: 20
+  learning_rate: 0.001
+  shuffle: True
+  batch_size: 4
+  device: cuda
+  top_k: [1, 3, 5]
+
+data:
+  dir: data/kaggle_dataset
+  min_images: 100
+  train_split: 0.8
+  dev_split: 0.1
+  test_split: 0.1
+  data_dir: data
+  split_seed: 42
