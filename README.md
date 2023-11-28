@@ -31,16 +31,13 @@ This project focuses on geolocation prediction (country) using Google Street Vie
    ```
     pip install -r requirements.txt
    ```
-4. Navigate to source directory:
+   
+4. Customize the configuration in the configs directory as needed. You can also use one of the already existing configurations.
+   
+5. Run the main script with desired options:
 
    ```
-    cd src
-   ```
-5. Customize the configuration in the configs/config.yaml file as needed.
-   Run the main script with desired options:
-
-   ```
-    python main.py --config configs/default.yaml
+    python src/main.py --config configs/default.yaml
    ```
 
 Alternatively, choose a different config.yaml.
@@ -60,7 +57,6 @@ Here are some milestones we achieved during the project:
 - Milestone 2: MobileNet model implementation with pre-trained weights
 - Milestone 3: Training loop and validation setup
 - Milestone 4: Testing loop and evaluation metrics
-- Milestone 5: Hyperparameter tuning and performance optimization
   Feel free to explore the repository and provide feedback or suggestions.
 
 We hope you find our project useful! 😊
