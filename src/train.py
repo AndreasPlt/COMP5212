@@ -11,7 +11,8 @@ from test import test
 def train(model, optimizer, criterion, train_loader, dev_loader, config,):
     model.to(config["training"]["device"])#
     criterion.to(config["training"]["device"])
-    model_name =f"{config['model']['name']}_{config['model']['unfreeze_last_n']}_unfreezed_{config['training']['num_epochs']}_epochs"
+    model_freeze_subname = f"freezed_{config['model']['unfreeze_last_n']}_unfreezed" if config["model"]["freeze"] else "all_unfreezed"
+    model_name =f"{config['model']['name']}_{model_freeze_subname}_{config['training']['num_epochs']}_epochs"
     writer_name = f"logs/{model_name}"
     writer = SummaryWriter(writer_name)
     progress_bar = tqdm(range(config["training"]["num_epochs"]))
@@ -30,7 +31,7 @@ def train(model, optimizer, criterion, train_loader, dev_loader, config,):
         outputs = model(images)
         labels = torch.squeeze(labels,dim=1)
         loss = criterion(outputs, labels)
-        initial_loss += loss
+        initial_loss += loss.detach()
     initial_loss /= n_batches
 
     post_fix = {
@@ -65,7 +66,7 @@ def train(model, optimizer, criterion, train_loader, dev_loader, config,):
             writer.add_scalar("Loss/batch", loss.item(), (epoch*n_batches + i))
             loss.backward()
             optimizer.step()
-            total_loss += loss
+            total_loss += loss.detach()
 
         total_loss /= n_batches
         writer.add_scalar("Loss (train)/epoch", total_loss.item(), epoch+1)

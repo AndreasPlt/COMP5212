@@ -56,10 +56,23 @@ def get_model(config):
     freeze = config["model"]["freeze"]
     unfreeze_last_n = config["model"]["unfreeze_last_n"]
 
-    return models.model.get_model(model_name, num_classes, pretrained, freeze, unfreeze_last_n)
+    return models.model.get_model(
+        model_name=model_name, 
+        num_classes=num_classes, 
+        pretrained=pretrained, 
+        freeze=freeze, 
+        unfreeze_last_n=unfreeze_last_n,
+        )
 
 def get_dataloader(config, valid_countries):
-    transforms = kaggle50k_dataset.transform
+    if config["model"]["freeze"] and config["model"]["unfreeze_last_n"] == 0:
+        # if freeze all layers, use default transforms
+        print("Using default transforms")
+        transforms = kaggle50k_dataset.default_transform
+    else:
+        # if unfreeze last n layers or not freeze at all, use unfreeze transforms
+        print("Using unfreeze transforms")
+        transforms = kaggle50k_dataset.transform_unfreeze
     batch_size = config["training"]["batch_size"]
 
     train_loader = DataLoader(
@@ -131,7 +144,7 @@ def main():
 
     model = get_model(config)
     # comment out if summary does not work
-    summary(model, (3, 1536, 662))
+    #summary(model, (3, 1536, 662))
 
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=config['training']['learning_rate'])
