@@ -1,3 +1,0 @@
-Accuracies of the model on the test images (top 1): 44.90%
-Accuracies of the model on the test images (top 3): 68.45%
-Accuracies of the model on the test images (top 5): 77.54%
