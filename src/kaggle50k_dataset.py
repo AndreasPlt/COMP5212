@@ -48,10 +48,6 @@ default_transform = transforms.Compose([
     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
 
-transform_unfreeze = transforms.Compose([
-    #transforms.Resize((192, 83)),
-    default_transform
-])
 
 # Specify the root directory of your dataset
 root_dir = "data/kaggle_dataset/"

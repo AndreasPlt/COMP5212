@@ -87,7 +87,7 @@ def train(model, optimizer, criterion, train_loader, dev_loader, config,):
     writer.close()
 
     # save model
-    save_path = f"checkpoints/model_{HOSTNAME}_{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}_{model_name}.pth"
+    save_path = f"checkpoints/NEW_model_{HOSTNAME}_{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}_{model_name}.pth"
     idx_to_labels = {idx: label for label, idx in train_loader.dataset.labels_to_idx.items()}
     torch.save({
         'model_state_dict': model.state_dict(),

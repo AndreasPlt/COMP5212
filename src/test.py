@@ -1,6 +1,6 @@
 import torch
 
-def test(model, test_loader, k=[1], device=torch.device("cpu"),):
+def test(model, test_loader, k=[1], device=torch.device("cuda"),):
     if not isinstance(k, list):
         k = [k]
     correct = len(k) * [0.]
